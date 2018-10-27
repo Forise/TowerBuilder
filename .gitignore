@@ -1,0 +1,6 @@
+/TowerBuilder/Library/metadata/bc/*.info
+*.info
+Debug
+Temp
+Library
+/TowerBuilder/.vs/TowerBuilder/v15/Server/sqlite3/db.lock
