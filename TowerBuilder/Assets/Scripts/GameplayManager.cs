@@ -41,6 +41,7 @@ public class GameplayManager : MonoBehaviour
     private Camera cam;
     private Vector3 baseCamPos;
     private bool isHold = false;
+    private Cylinder lastCylinder;
     #endregion
 
     #region Properties
@@ -107,20 +108,59 @@ public class GameplayManager : MonoBehaviour
         cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y + settings.yStep, cam.transform.position.z);
 
         tower.Add(newCylinder);
-        newCylinder.StartScale(settings.endAnimationScale);
+        lastCylinder = newCylinder;
+        newCylinder.StartBuildScale(settings.endAnimationScale);
     }
 
     public void CheckCylinderScale()
     {
-        if (tower[tower.Count - 1].transform.localScale.x > 1 || tower[tower.Count - 1].transform.localScale.z > 1)
+        lastCylinder.StopAllCoroutines();
+        //if Lose
+        if (lastCylinder.transform.localScale.x > 1 || lastCylinder.transform.localScale.z > 1)
         {
             StopGame();
         }
-        else if (tower[tower.Count - 1].transform.localScale.x > 1 - settings.scaleFault || 
-            tower[tower.Count - 1].transform.localScale.z > 1 - settings.scaleFault)
+        else if (lastCylinder.transform.localScale.x >= 1 - settings.scaleFault &&
+            lastCylinder.transform.localScale.z >= 1 - settings.scaleFault)
         {
-            tower[tower.Count - 1].isPerfect = true;
+            lastCylinder.isPerfect = true;
+            StartCoroutine(TowerWaveAnim());
         }
+    }
+
+    private IEnumerator TowerWaveAnim()
+    {
+        float waveAnimDelay = 0.2f;
+        Vector3 toBigger;
+        Vector3 toLesser;
+        if (lastCylinder.isPerfect)
+        {
+            toBigger = new Vector3(lastCylinder.transform.localScale.x + 0.4f,
+                                            lastCylinder.transform.localScale.y,
+                                            lastCylinder.transform.localScale.z + 0.4f);
+            toLesser = new Vector3(toBigger.x - 0.2f, toBigger.y, toBigger.z - 0.2f);
+            lastCylinder.StartWaveAnim(toBigger, toLesser);
+
+
+            for (int i = tower.Count - 2; i >= 0; i--)
+            {
+                yield return new WaitForSeconds(waveAnimDelay);
+                toBigger = new Vector3(tower[i].transform.localScale.x + 0.3f,
+                                            tower[i].transform.localScale.y,
+                                            tower[i].transform.localScale.z + 0.3f);
+                if (tower[i].isPerfect)
+                {
+                    //to start scale
+                    toLesser = new Vector3(tower[i].transform.localScale.x, tower[i].transform.localScale.y, tower[i].transform.localScale.z);
+                }
+                else
+                {
+                    toLesser = new Vector3(toBigger.x * 0.8f, toBigger.y, toBigger.z * 0.8f);
+                }
+                tower[i].StartWaveAnim(toBigger, toLesser);
+            }
+        }
+        yield return null;
     }
     #endregion
 }

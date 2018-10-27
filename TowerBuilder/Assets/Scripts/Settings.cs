@@ -7,8 +7,9 @@ public class Settings : ScriptableObject
 {
     [HideInInspector]
     public float yStep = 1f;
-    public float scaleSpeed = 1;
-    public float scaleFault = 0.5f;
     [HideInInspector]
     public Vector3 endAnimationScale = new Vector3(1.5f, 1, 1.5f);
+    public float buildScaleSpeed = 1;
+    public float waveAnimTime = 0.1f;
+    public float scaleFault = 0.05f;
 }

@@ -11,16 +11,22 @@ public class Cylinder : MonoBehaviour
     private Material loseMaterial;
     [SerializeField]
     private Material baseMaterial;
+    public bool isScaling = false;
     public bool isPerfect = false;
     #endregion
 
     #region Methods
-    public void StartScale(Vector3 endScale)
+    public void StartBuildScale(Vector3 endScale)
     {
-        StartCoroutine(SmoothScale(endScale));
+        StartCoroutine(SmoothBuildScale(endScale));
     }
 
-    public void StopScale()
+    public void StartWaveAnim(Vector3 toBigger, Vector3 toLesser)
+    {
+        StartCoroutine(WaveAnim(toBigger, toLesser));
+    }
+
+    public void StopAllScale()
     {
         StopAllCoroutines();
     }
@@ -35,24 +41,46 @@ public class Cylinder : MonoBehaviour
         gameObject.GetComponent<MeshRenderer>().material = baseMaterial;
     }
 
-    private IEnumerator SmoothScale(Vector3 endScale)
+    private IEnumerator SmoothBuildScale(Vector3 endScale)
     {
-        bool isScaling = true;
+        isScaling = true;
         while (isScaling)
         {
             if (transform.localScale.x < maxScale.x && transform.localScale.z < maxScale.z && GameplayManager.Instance.IsHold)
             {
-                transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.scaleSpeed * Time.deltaTime);
-                yield return transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z);
+                transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.buildScaleSpeed * Time.deltaTime);
+                yield return transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z); //hold "y" scale
             }
                 
             else
             {
-                SetLoseMaterial();
-                GameplayManager.Instance.CheckCylinderScale();
                 yield return isScaling = false;
+                GameplayManager.Instance.CheckCylinderScale();                
             }
         }
+    }
+
+    private IEnumerator SmoothScaleTo(Vector3 endScale)
+    {
+        isScaling = true;
+        float elapsedTime = 0;
+        while (elapsedTime < GameplayManager.Instance.settings.waveAnimTime)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, endScale, elapsedTime / GameplayManager.Instance.settings.waveAnimTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        transform.localScale = endScale;
+        isScaling = false;
+    }
+
+    private IEnumerator WaveAnim(Vector3 toBigger, Vector3 toLesser)
+    {
+        isScaling = true;
+        yield return StartCoroutine(SmoothScaleTo(toBigger));
+        while (isScaling)
+            yield return null;
+        yield return StartCoroutine(SmoothScaleTo(toLesser));
     }
     #endregion
 }
