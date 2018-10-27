@@ -20,6 +20,7 @@ public class CylinderPool : MonoBehaviour
                 if (!pool[i].gameObject.activeInHierarchy)
                 {
                     pool[i].gameObject.transform.localScale = new Vector3(0,1,0);
+                    pool[i].SetBaseMaterial();
                     pool[i].gameObject.SetActive(true);
                     return pool[i];
                 }

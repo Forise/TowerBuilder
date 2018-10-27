@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb59e6a60ed069429f4c930f664d317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loseMaterial: {fileID: 0}
   isPerfect: 0
 --- !u!1 &534669902
 GameObject:

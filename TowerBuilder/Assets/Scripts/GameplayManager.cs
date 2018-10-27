@@ -53,6 +53,7 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
+        settings.yStep = baseCylinder.transform.localScale.y * 2;
         IsHold = false;
         cam = FindObjectOfType<Camera>();
         baseCamPos = cam.transform.position;
@@ -65,7 +66,7 @@ public class GameplayManager : MonoBehaviour
         {
             if (isGameOver)
                 StartGame();
-            if(!IsHold)
+            else if(!IsHold)
             {
                 IsHold = true;
                 BuildCylinder();                
@@ -101,7 +102,7 @@ public class GameplayManager : MonoBehaviour
         newCylinder.gameObject.transform.parent = tower[tower.Count - 1].transform;
 
         var newCylinderPos = newCylinder.gameObject.transform.position;
-        newCylinder.gameObject.transform.position = new Vector3(newCylinderPos.x, (settings.yStep * tower.Count), newCylinderPos.z);
+        newCylinder.gameObject.transform.position = new Vector3(newCylinderPos.x, settings.yStep * tower.Count, newCylinderPos.z);
 
         cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y + settings.yStep, cam.transform.position.z);
 

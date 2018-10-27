@@ -95,4 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb59e6a60ed069429f4c930f664d317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loseMaterial: {fileID: 2100000, guid: 0976a5e4149864241a8f75d5885d2daf, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 76e3df0ce0b48284cbe6dc4a4d701c90, type: 2}
   isPerfect: 0
