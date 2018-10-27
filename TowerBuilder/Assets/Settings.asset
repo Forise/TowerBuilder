@@ -16,3 +16,4 @@ MonoBehaviour:
   buildScaleSpeed: 1
   waveAnimTime: 0.1
   scaleFault: 0.05
+  blockInputWhileWaveAnimationPlaying: 1

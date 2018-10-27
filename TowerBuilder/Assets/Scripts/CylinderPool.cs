@@ -34,22 +34,25 @@ public class CylinderPool : MonoBehaviour
 
     public void Push(Cylinder cylinder)
     {
-        if (cylinder.gameObject.activeInHierarchy)
+        if (cylinder != null)
         {
-            try
+            if (cylinder.gameObject.activeInHierarchy)
             {
-                Cylinder objectToPush = pool.Find(x => x == cylinder);
+                    Cylinder objectToPush = pool.Find(x => x == cylinder);
 
-                if (objectToPush == null)
-                    AddObjectToPool(objectToPush);
+                    if (objectToPush == null)
+                        AddObjectToPool(objectToPush);
 
-                objectToPush.gameObject.SetActive(false);
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError(ex, this);
+                    objectToPush.gameObject.SetActive(false);
             }
         }
+        else
+            RemoveFromPool(cylinder);
+    }
+
+    private void RemoveFromPool(Cylinder cylinder)
+    {
+        pool.Remove(cylinder);
     }
 
     public void AddObjectToPool(Cylinder cylinder)

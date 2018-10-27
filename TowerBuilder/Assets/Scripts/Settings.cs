@@ -12,4 +12,5 @@ public class Settings : ScriptableObject
     public float buildScaleSpeed = 1;
     public float waveAnimTime = 0.1f;
     public float scaleFault = 0.05f;
+    public bool blockInputWhileWaveAnimationPlaying = false;
 }

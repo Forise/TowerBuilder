@@ -38,6 +38,7 @@ public class GameplayManager : MonoBehaviour
     private Cylinder baseCylinder;
     private List<Cylinder> tower = new List<Cylinder>();
     private bool isGameOver = true;
+    private bool isInputBlocked = false;
     private Camera cam;
     private Vector3 baseCamPos;
     private bool isHold = false;
@@ -63,10 +64,10 @@ public class GameplayManager : MonoBehaviour
 
     private void Update ()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && !isInputBlocked)
         {
             if (isGameOver)
-                StartGame();
+                RestartGame();
             else if(!IsHold)
             {
                 IsHold = true;
@@ -89,12 +90,17 @@ public class GameplayManager : MonoBehaviour
 
     private void StopGame()
     {
-        isGameOver = true;
         for(int i = tower.Count - 1; i >= 1; i--)
         {
             pool.Push(tower[i]);
         }
         cam.transform.position = baseCamPos;
+    }
+
+    private void RestartGame()
+    {
+        StopGame();
+        StartGame();
     }
 
     private void BuildCylinder()
@@ -118,7 +124,7 @@ public class GameplayManager : MonoBehaviour
         //if Lose
         if (lastCylinder.transform.localScale.x > 1 || lastCylinder.transform.localScale.z > 1)
         {
-            StopGame();
+            StartCoroutine(GameOver());
         }
         else if (lastCylinder.transform.localScale.x >= 1 - settings.scaleFault &&
             lastCylinder.transform.localScale.z >= 1 - settings.scaleFault)
@@ -130,6 +136,8 @@ public class GameplayManager : MonoBehaviour
 
     private IEnumerator TowerWaveAnim()
     {
+        if (settings.blockInputWhileWaveAnimationPlaying)
+            isInputBlocked = true;
         float waveAnimDelay = 0.2f;
         Vector3 toBigger;
         Vector3 toLesser;
@@ -160,7 +168,20 @@ public class GameplayManager : MonoBehaviour
                 tower[i].StartWaveAnim(toBigger, toLesser);
             }
         }
+        if(settings.blockInputWhileWaveAnimationPlaying)
+            isInputBlocked = false;
         yield return null;
+    }
+
+    private IEnumerator GameOver()
+    {
+        isGameOver = true;
+        isInputBlocked = true;
+        tower[tower.Count - 1].SetLoseMaterial();
+        yield return new WaitForSeconds(0.5f);
+        tower[tower.Count - 1].gameObject.SetActive(false);
+        cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, -tower.Count - 1);
+        isInputBlocked = false;
     }
     #endregion
 }
