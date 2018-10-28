@@ -152,19 +152,22 @@ public class GameplayManager : MonoBehaviour
             for (int i = tower.Count - 2; i >= 0; i--)
             {
                 yield return new WaitForSeconds(waveAnimDelay);
-                toBigger = new Vector3(tower[i].transform.localScale.x + 0.3f,
-                                            tower[i].transform.localScale.y,
-                                            tower[i].transform.localScale.z + 0.3f);
-                if (tower[i].isPerfect)
+                if (tower[i] != null)
                 {
-                    //to start scale
-                    toLesser = new Vector3(tower[i].transform.localScale.x, tower[i].transform.localScale.y, tower[i].transform.localScale.z);
+                    toBigger = new Vector3(tower[i].transform.localScale.x + 0.3f,
+                                                tower[i].transform.localScale.y,
+                                                tower[i].transform.localScale.z + 0.3f);
+                    if (tower[i].isPerfect)
+                    {
+                        //to start scale
+                        toLesser = new Vector3(tower[i].transform.localScale.x, tower[i].transform.localScale.y, tower[i].transform.localScale.z);
+                    }
+                    else
+                    {
+                        toLesser = new Vector3(toBigger.x * 0.8f, toBigger.y, toBigger.z * 0.8f);
+                    }
+                    tower[i].StartWaveAnim(toBigger, toLesser);
                 }
-                else
-                {
-                    toLesser = new Vector3(toBigger.x * 0.8f, toBigger.y, toBigger.z * 0.8f);
-                }
-                tower[i].StartWaveAnim(toBigger, toLesser);
             }
         }
         if(settings.blockInputWhileWaveAnimationPlaying)
