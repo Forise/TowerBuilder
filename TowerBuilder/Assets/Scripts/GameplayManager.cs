@@ -106,7 +106,7 @@ public class GameplayManager : MonoBehaviour
     private void BuildCylinder()
     {
         Cylinder newCylinder = pool.Pull();
-        newCylinder.gameObject.transform.parent = tower[tower.Count - 1].transform;
+        newCylinder.gameObject.transform.parent = pool.transform;
 
         var newCylinderPos = newCylinder.gameObject.transform.position;
         newCylinder.gameObject.transform.position = new Vector3(newCylinderPos.x, settings.yStep * tower.Count, newCylinderPos.z);
@@ -114,20 +114,20 @@ public class GameplayManager : MonoBehaviour
         cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y + settings.yStep, cam.transform.position.z);
 
         tower.Add(newCylinder);
-        lastCylinder = newCylinder;
-        newCylinder.StartBuildScale(settings.endAnimationScale);
+        lastCylinder = newCylinder;            
+        newCylinder.StartBuildScale(tower[tower.Count - 2].transform.localScale);
     }
 
     public void CheckCylinderScale()
     {
         lastCylinder.StopAllCoroutines();
         //if Lose
-        if (lastCylinder.transform.localScale.x > 1 || lastCylinder.transform.localScale.z > 1)
+        if (lastCylinder.transform.lossyScale.x > tower[tower.Count-2].transform.lossyScale.x || lastCylinder.transform.lossyScale.z > tower[tower.Count - 2].transform.lossyScale.z)
         {
             StartCoroutine(GameOver());
         }
-        else if (lastCylinder.transform.localScale.x >= 1 - settings.scaleFault &&
-            lastCylinder.transform.localScale.z >= 1 - settings.scaleFault)
+        else if (lastCylinder.transform.localScale.x >= tower[tower.Count - 2].transform.lossyScale.x - settings.scaleFault &&
+            lastCylinder.transform.localScale.z >= tower[tower.Count - 2].transform.lossyScale.z - settings.scaleFault)
         {
             lastCylinder.isPerfect = true;
             StartCoroutine(TowerWaveAnim());
@@ -177,9 +177,9 @@ public class GameplayManager : MonoBehaviour
     {
         isGameOver = true;
         isInputBlocked = true;
-        tower[tower.Count - 1].SetLoseMaterial();
+        lastCylinder.SetLoseMaterial();
         yield return new WaitForSeconds(0.5f);
-        tower[tower.Count - 1].gameObject.SetActive(false);
+        lastCylinder.gameObject.SetActive(false);
         cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, -tower.Count - 1);
         isInputBlocked = false;
     }

@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   yStep: 0.5
-  endAnimationScale: {x: 1.5, y: 1.1, z: 1.5}
-  buildScaleSpeed: 1
+  buildScaleSpeed: 1.5
   waveAnimTime: 0.1
   scaleFault: 0.05
-  blockInputWhileWaveAnimationPlaying: 1
+  blockInputWhileWaveAnimationPlaying: 0

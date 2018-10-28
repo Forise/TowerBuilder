@@ -5,12 +5,13 @@ using UnityEngine;
 public class Cylinder : MonoBehaviour
 {
     #region Fields
-    private Vector3 maxScale = new Vector3(1.1f, 1, 1.1f);
-    private Vector3 minScale = new Vector3(0.1f, 1, 0.1f);
+    private Vector3 maxScale = new Vector3();
+    private Vector3 minScale = new Vector3();
     [SerializeField]
     private Material loseMaterial;
     [SerializeField]
     private Material baseMaterial;
+    [HideInInspector]
     public bool isScaling = false;
     public bool isPerfect = false;
     #endregion
@@ -44,14 +45,21 @@ public class Cylinder : MonoBehaviour
     private IEnumerator SmoothBuildScale(Vector3 endScale)
     {
         isScaling = true;
+        minScale = new Vector3(endScale.x * 0.1f, endScale.y, endScale.z * 0.1f);
+        maxScale = new Vector3(endScale.x * 1.1f, endScale.y, endScale.z * 1.1f);
+        endScale = new Vector3(endScale.x * 2, endScale.y, endScale.z * 2);
         while (isScaling)
         {
-            if (transform.localScale.x < maxScale.x && transform.localScale.z < maxScale.z && GameplayManager.Instance.IsHold)
+            if (transform.localScale.x < minScale.x && transform.localScale.z < minScale.z && GameplayManager.Instance.IsHold)
             {
                 transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.buildScaleSpeed * Time.deltaTime);
-                yield return transform.localScale = new Vector3(transform.localScale.x, 1, transform.localScale.z); //hold "y" scale
+                yield return transform.localScale = new Vector3(transform.localScale.x, endScale.y, transform.localScale.z); //hold "y" scale
             }
-                
+            else if (transform.localScale.x < maxScale.x && transform.localScale.z < maxScale.z && GameplayManager.Instance.IsHold)
+            {
+                transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.buildScaleSpeed * Time.deltaTime);
+                yield return transform.localScale = new Vector3(transform.localScale.x, endScale.y, transform.localScale.z); //hold "y" scale
+            }                
             else
             {
                 yield return isScaling = false;

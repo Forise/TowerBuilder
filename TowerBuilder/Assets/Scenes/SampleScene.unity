@@ -335,7 +335,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb59e6a60ed069429f4c930f664d317, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loseMaterial: {fileID: 0}
+  loseMaterial: {fileID: 2100000, guid: 0976a5e4149864241a8f75d5885d2daf, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 76e3df0ce0b48284cbe6dc4a4d701c90, type: 2}
+  isScaling: 0
   isPerfect: 0
 --- !u!1 &534669902
 GameObject:
@@ -457,7 +459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24c46a9b35ebd254ea3e9ab300a95619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 18606464438ec454e861281b61995400, type: 2}
+  settings: {fileID: 11400000, guid: 4bf0e828aa2a52a4aa73ccd8f3e038a4, type: 2}
   pool: {fileID: 2013919948}
   baseCylinder: {fileID: 383043966}
 --- !u!1 &2013919947
