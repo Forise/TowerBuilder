@@ -49,7 +49,8 @@ public class GameplayManager : MonoBehaviour
         settings.yStep = baseCylinder.transform.localScale.y * 2;        
         cam = FindObjectOfType<Camera>();
         baseCamPos = cam.transform.position;
-        InputManager.Instance.OnMouseDown += MouseDown;
+        InputManager.Instance.OnMouseHold += MouseHold;
+        InputManager.Instance.OnMouseClick += MouseClick;
         StartGame();
     }
 
@@ -57,7 +58,8 @@ public class GameplayManager : MonoBehaviour
     {
         try
         {
-            InputManager.Instance.OnMouseDown -= MouseDown;
+            InputManager.Instance.OnMouseHold -= MouseHold;
+            InputManager.Instance.OnMouseClick -= MouseClick;
         }
         catch(System.Exception ex)
         {
@@ -66,17 +68,24 @@ public class GameplayManager : MonoBehaviour
     }
 
     #region Methods
-    private void MouseDown()
+    private void MouseHold()
+    {
+        if (!InputManager.Instance.IsInputBlocked)
+        {
+            if (!InputManager.Instance.IsHold)
+            {
+                InputManager.Instance.IsHold = true;
+                BuildCylinder();
+            }
+        }
+    }
+
+    private void MouseClick()
     {
         if (!InputManager.Instance.IsInputBlocked)
         {
             if (isGameOver)
                 RestartGame();
-            else if (!InputManager.Instance.IsHold)
-            {
-                InputManager.Instance.IsHold = true;
-                BuildCylinder();
-            }
         }
     }
 

@@ -31,8 +31,10 @@ public class InputManager : MonoBehaviour
     }
     #endregion
     private bool isInputBlocked = false;
-    public delegate void MouseDownDelegate();
-    public event MouseDownDelegate OnMouseDown;
+    public delegate void MouseHoldDelegate();
+    public event MouseHoldDelegate OnMouseHold;
+    public delegate void MouseClickDelegate();
+    public event MouseClickDelegate OnMouseClick;
     private bool isHold = false;
     #endregion
 
@@ -58,7 +60,8 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0) && !isInputBlocked)
-        {            
+        {
+            OnMouseClick();
             StartCoroutine(IsHoldCoroutine());
         }
         if (Input.GetMouseButtonUp(0))
@@ -81,7 +84,7 @@ public class InputManager : MonoBehaviour
     private IEnumerator IsHoldCoroutine()
     {
         yield return new WaitForSeconds(0.1f);
-        OnMouseDown();
+        OnMouseHold();
         IsHold = true;
     }
     #endregion
