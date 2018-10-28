@@ -38,49 +38,48 @@ public class GameplayManager : MonoBehaviour
     private Cylinder baseCylinder;
     private List<Cylinder> tower = new List<Cylinder>();
     private bool isGameOver = true;
-    private bool isInputBlocked = false;
     private Camera cam;
     private Vector3 baseCamPos;
     private bool isHold = false;
     private Cylinder lastCylinder;
     #endregion
 
-    #region Properties
-    public bool IsHold
-    {
-        get { return isHold; }
-        private set { isHold = value; }
-    }
-    #endregion
-
     private void Start()
     {
-        settings.yStep = baseCylinder.transform.localScale.y * 2;
-        IsHold = false;
+        settings.yStep = baseCylinder.transform.localScale.y * 2;        
         cam = FindObjectOfType<Camera>();
         baseCamPos = cam.transform.position;
+        InputManager.Instance.OnMouseDown += MouseDown;
         StartGame();
     }
 
-    private void Update ()
+    private void OnDestroy()
     {
-        if(Input.GetMouseButtonDown(0) && !isInputBlocked)
+        try
         {
-            if (isGameOver)
-                RestartGame();
-            else if(!IsHold)
-            {
-                IsHold = true;
-                BuildCylinder();                
-            }
+            InputManager.Instance.OnMouseDown -= MouseDown;
         }
-        if(Input.GetMouseButtonUp(0))
+        catch(System.Exception ex)
         {
-            IsHold = false;
+            Debug.LogWarning(ex, this);
         }
     }
 
     #region Methods
+    private void MouseDown()
+    {
+        if (!InputManager.Instance.IsInputBlocked)
+        {
+            if (isGameOver)
+                RestartGame();
+            else if (!InputManager.Instance.IsHold)
+            {
+                InputManager.Instance.IsHold = true;
+                BuildCylinder();
+            }
+        }
+    }
+
     private void StartGame()
     {
         isGameOver = false;
@@ -137,7 +136,7 @@ public class GameplayManager : MonoBehaviour
     private IEnumerator TowerWaveAnim()
     {
         if (settings.blockInputWhileWaveAnimationPlaying)
-            isInputBlocked = true;
+            InputManager.Instance.BlockInput();
         float waveAnimDelay = 0.2f;
         Vector3 toBigger;
         Vector3 toLesser;
@@ -169,19 +168,19 @@ public class GameplayManager : MonoBehaviour
             }
         }
         if(settings.blockInputWhileWaveAnimationPlaying)
-            isInputBlocked = false;
+            InputManager.Instance.UnblockInput();
         yield return null;
     }
 
     private IEnumerator GameOver()
     {
         isGameOver = true;
-        isInputBlocked = true;
+        InputManager.Instance.BlockInput();
         lastCylinder.SetLoseMaterial();
         yield return new WaitForSeconds(0.5f);
         lastCylinder.gameObject.SetActive(false);
         cam.transform.position = new Vector3(cam.transform.position.x, cam.transform.position.y, -tower.Count - 1);
-        isInputBlocked = false;
+        InputManager.Instance.UnblockInput();
     }
     #endregion
 }

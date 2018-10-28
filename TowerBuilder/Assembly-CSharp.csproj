@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Cylinder.cs" />
     <Compile Include="Assets\Scripts\CylinderPool.cs" />
     <Compile Include="Assets\Scripts\GameplayManager.cs" />
+    <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Projects/TowerBuilder/TowerBuilder/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

@@ -50,12 +50,12 @@ public class Cylinder : MonoBehaviour
         endScale = new Vector3(endScale.x * 2, endScale.y, endScale.z * 2);
         while (isScaling)
         {
-            if (transform.localScale.x < minScale.x && transform.localScale.z < minScale.z && GameplayManager.Instance.IsHold)
+            if (transform.localScale.x < minScale.x && transform.localScale.z < minScale.z && InputManager.Instance.IsHold)
             {
                 transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.buildScaleSpeed * Time.deltaTime);
                 yield return transform.localScale = new Vector3(transform.localScale.x, endScale.y, transform.localScale.z); //hold "y" scale
             }
-            else if (transform.localScale.x < maxScale.x && transform.localScale.z < maxScale.z && GameplayManager.Instance.IsHold)
+            else if (transform.localScale.x < maxScale.x && transform.localScale.z < maxScale.z && InputManager.Instance.IsHold)
             {
                 transform.localScale = Vector3.Lerp(transform.localScale, endScale, GameplayManager.Instance.settings.buildScaleSpeed * Time.deltaTime);
                 yield return transform.localScale = new Vector3(transform.localScale.x, endScale.y, transform.localScale.z); //hold "y" scale
