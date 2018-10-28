@@ -58,13 +58,13 @@ public class InputManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0) && !isInputBlocked)
-        {
-            OnMouseDown();
-            IsHold = true;
+        {            
+            StartCoroutine(IsHoldCoroutine());
         }
         if (Input.GetMouseButtonUp(0))
         {
-            IsHold = false;          
+            StopAllCoroutines();
+            IsHold = false;
         }
     }
     #region Methods
@@ -76,6 +76,13 @@ public class InputManager : MonoBehaviour
     public void UnblockInput()
     {
         IsInputBlocked = false;
+    }
+
+    private IEnumerator IsHoldCoroutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        OnMouseDown();
+        IsHold = true;
     }
     #endregion
 }
